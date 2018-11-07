@@ -13,5 +13,6 @@ class Users(Document):
     device = ReferenceField(Devices)
 
     def generate_token(self):
-        self.update(token = str(uuid4()))
-        return self.token
+        token = str(uuid4())
+        self.update(token = token)
+        return token
