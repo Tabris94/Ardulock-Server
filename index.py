@@ -5,7 +5,6 @@ import json
 from mongoengine import *
 from controllers.Api_App.registration import registrationController
 from controllers.Api_App.login import loginController
-from controllers.Api_Arduino.arduino import Arduino
 
 app = Flask(__name__)
 app.config['MONGODB_HOST'] = 'mongodb://localhost:27017/ArduLock'
@@ -14,8 +13,6 @@ app.config['CORS_ORIGINS'] = "*"
 app.config['CORS_HEADERS'] = ['Content-Type']
 
 connect('Ardulock-db', host='localhost', port=27017)
-
-ard = Arduino()
 
 @app.route("/")
 @cross_origin()
