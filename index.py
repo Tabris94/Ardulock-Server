@@ -3,6 +3,7 @@ from flask_cors import cross_origin
 from flask import Response
 import json
 from mongoengine import *
+from controllers.Api_Arduino.arduino import Arduino
 from controllers.Api_App.registration import registrationController
 from controllers.Api_App.login import loginController
 from controllers.Api_App.getArdulocks import getArdulocksController
@@ -14,6 +15,7 @@ app = Flask(__name__)
 app.debug = True
 app.config['CORS_ORIGINS'] = "*"
 app.config['CORS_HEADERS'] = ['Content-Type']
+
 connect('Ardulock-db', host='localhost', port=27017)
 
 @app.route("/")

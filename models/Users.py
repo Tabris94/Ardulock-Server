@@ -1,5 +1,5 @@
 from mongoengine import Document, StringField, ReferenceField
-from Devices import Devices
+from models.Devices import Devices
 import string
 import random
 from uuid import uuid4
