@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from flask import Flask, request 
 from flask_cors import cross_origin
 from flask import Response
@@ -86,7 +85,7 @@ def setStatus():
 
 if __name__ == "__main__":
     app.run(use_reloader=False)
-=======
+
 from flask import Flask, request 
 from flask_cors import cross_origin
 from flask import Response
@@ -170,4 +169,3 @@ def getLog():
 
 if __name__ == "__main__":
     app.run()
->>>>>>> next
