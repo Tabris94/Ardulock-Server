@@ -8,6 +8,7 @@ from controllers.Api_App.registration import registrationController
 from controllers.Api_App.login import loginController
 from controllers.Api_App.getArdulocks import getArdulocksController
 from controllers.Api_App.setStatus import setStatusContoller
+from controllers.Api_App.checkIdentity import checkIdentity
 from models.Users import *
 from models.Devices import *
 
@@ -44,6 +45,13 @@ def index():
 @cross_origin()
 def stato():
     return ard.statoAllarme("01240009480124000966")
+
+@app.route('/Api/App/checkIdentity', methods=['POST'])
+@cross_origin()
+def checkIdentities():
+    if checkIdentity(request.get_json()):
+        return Response('', status = 200, mimetype='application/json')
+    return Response('', status = 400, mimetype='application/json')
 
 @app.route("/Api/App/registration", methods=['POST'])
 @cross_origin()
