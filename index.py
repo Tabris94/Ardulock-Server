@@ -135,7 +135,11 @@ def login():
 @cross_origin()
 def getArdulocks():
     result = getArdulocksController(request.get_json())
-    if result != 400 and result != 401:
+    if result == 401:
+        return Response('', status = 401, mimetype='application/json')
+    elif result == 400:
+        return Response('', status = 200, mimetype='application/json')
+    else:
         data = {}
         data['mat'] = result.mat
         data['statusFirstSensor'] = result.statusFirstSensor
@@ -144,7 +148,6 @@ def getArdulocks():
         data['labelSecondSensor'] = result.labelSecondSensor
         json_data = json.dumps(data)
         return Response(json_data, status = 200, mimetype='application/json')
-    return Response('', status = result, mimetype='application/json')
 
 @app.route("/Api/App/setStatus", methods=['POST'])
 @cross_origin()
