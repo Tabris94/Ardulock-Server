@@ -138,7 +138,7 @@ def getArdulocks():
     if result == 401:
         return Response('', status = 401, mimetype='application/json')
     elif result == 400:
-        return Response('', status = 200, mimetype='application/json')
+        return Response('', status = 400, mimetype='application/json')
     else:
         data = {}
         data['mat'] = result.mat
