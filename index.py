@@ -16,12 +16,34 @@ app.debug = True
 app.config['CORS_ORIGINS'] = "*"
 app.config['CORS_HEADERS'] = ['Content-Type']
 
+ard = Arduino()
+
 connect('Ardulock-db', host='localhost', port=27017)
 
-@app.route("/")
+@app.route("/z1")
+@cross_origin()
+def z1():
+    return 'Zona 1 ' + ard.attivaZone("01240009480124000966", True, False)
+
+@app.route("/z2")
+@cross_origin()
+def z2():
+    return 'Zona 2 ' + ard.attivaZone("01240009480124000966", False, True)
+
+@app.route("/z3")
+@cross_origin()
+def z3():
+    return 'Entrambe ' + ard.attivaZone("01240009480124000966", True, True)
+
+@app.route("/z0")
 @cross_origin()
 def index():
-    return 'hello world'
+    return 'hello world ' + ard.attivaZone("01240009480124000966", False, False)
+
+@app.route("/stato")
+@cross_origin()
+def stato():
+    return ard.statoAllarme("01240009480124000966")
 
 @app.route("/Api/App/registration", methods=['POST'])
 @cross_origin()
@@ -62,4 +84,4 @@ def setStatus():
     return Response('', status = setStatusContoller(request.get_json()), mimetype='application/json')
 
 if __name__ == "__main__":
-    app.run()
+    app.run(use_reloader=False)

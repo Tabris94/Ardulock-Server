@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, BooleanField, StringField
+from mongoengine import Document, StringField, BooleanField, StringField, IntField
 
 class Devices(Document):
     mat = StringField(required = True)
@@ -7,4 +7,4 @@ class Devices(Document):
     statusFirstSensor = BooleanField(required = True)
     statusSecondSensor = BooleanField(required = True)
     unlockPassword = StringField(min_length = 6)
-    last_EndPoint = StringField()
+    last_EndPoint = IntField()#StringField()
