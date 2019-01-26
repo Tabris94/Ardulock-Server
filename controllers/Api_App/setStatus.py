@@ -4,7 +4,6 @@ from models.Logs import Logs
 import datetime
 
 def setStatusContoller(body):
-    print body
     user = Users.objects(token = body['token'])
     if user:
         if user[0].device.unlockPassword == body['password']:
