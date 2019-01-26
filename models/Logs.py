@@ -1,5 +1,5 @@
 from mongoengine import Document, DateTimeField, StringField, ReferenceField
-from Devices import Devices
+from models.Devices import Devices
 
 class Logs(Document):
     time = DateTimeField(required = True)
