@@ -49,55 +49,56 @@ class Arduino:
                 time.sleep(1)
 
                 #if Devices.objects(mat = j['Seriale']):
-                if True:
-                    if "Seriale" in msg.decode("utf-8"):
-                        t = Esito("OK")
-                        trovato = False
-                        rispondereOK = True
-                        
-                        for cl in self.clients:
-                            if cl[1] == j['Seriale']:
-                                trovato = True
+                #if True:
+                if "Seriale" in msg.decode("utf-8"):
+                    t = Esito("OK")
+                    trovato = False
+                    rispondereOK = True
+                    
+                    #Stabilisco se è l'invio della configurazione iniziale..
+                    isInvioConfigurazioneIniziale = False
+                    if 'email' in j:
+                        isInvioConfigurazioneIniziale = True
 
-                                cl[0] = clientsocket
-                                print("Aggiornato Array")
+                    for cl in self.clients:
+                        if cl[1] == j['Seriale']:
+                            trovato = True
 
-                                try:
-                                    cl[2] = j['Esito']
-                                    rispondereOK = False
-                                except:
-                                    pass
+                            cl[0] = clientsocket
+                            print("Aggiornato Array")
 
-                                try:
-                                    x = j['Z1']
-                                    rispondereOK = False
-                                    cl[3] = msg.decode("utf-8")
-                                except:
-                                    pass
+                            #Se è l'invio di Esito in seguito alla richiesta di Attiva/Disattiva Allarme
+                            if 'Esito' in j:
+                                cl[2] = j['Esito']
+                                rispondereOK = False
+                            #Se è la risposta seguita da una richista di "stato"
+                            elif 'Z1' in j:
+                                rispondereOK = False
+                                cl[3] = msg.decode("utf-8")
+                            #Se è un' invio di log
+                            elif 'Log' in j:
+                                #Bisogna Archiviare i log nel db..
+                                print(j['Log'])
+                            
+                            break
+                    
+                    if not trovato:
+                        self.clients.append([clientsocket, j['Seriale'], "", ""])
+                        print("Aggiunto")
 
-                                try:
-                                    l = j['Log']
-                                    rispondereOK = False
-                                    print(l)
-                                except:
-                                    pass
+                    if isInvioConfigurazioneIniziale:
+                        print("Archivio La Conf. Iniz. Nel DB")
 
-                                break
-                        
-                        if not trovato:
-                            self.clients.append([clientsocket, j['Seriale'], "", ""])
-                            print("Aggiunto")
+                    if rispondereOK:
+                        clientsocket.send(bytearray(json.dumps(t.__dict__), 'utf-8'))
+                    
+                    print("NumClient ", len(self.clients))
 
-                        if rispondereOK:
-                            clientsocket.send(bytearray(json.dumps(t.__dict__), 'utf-8'))
-                        
-                        print("NumClient ", len(self.clients))
-
-                else:
-                    t = Esito("KO")
-                    clientsocket.send(bytearray(json.dumps(t.__dict__), 'utf-8'))
-                    clientsocket.close()
-                    break
+                #else:
+                #    t = Esito("KO")
+                #    clientsocket.send(bytearray(json.dumps(t.__dict__), 'utf-8'))
+                #    clientsocket.close()
+                #    break
             else:
                 print ("msg Ignorato: " + msg.decode("utf-8"))
 
@@ -133,3 +134,4 @@ class Arduino:
                         print("Timeout")
                         timeout = True
         return ""
+
