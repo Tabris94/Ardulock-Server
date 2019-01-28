@@ -48,57 +48,58 @@ class Arduino:
                 j = json.loads(msg)
                 time.sleep(1)
 
-                #if Devices.objects(mat = j['Seriale']):
-                #if True:
-                if "Seriale" in msg.decode("utf-8"):
-                    t = Esito("OK")
-                    trovato = False
-                    rispondereOK = True
-                    
-                    #Stabilisco se è l'invio della configurazione iniziale..
-                    isInvioConfigurazioneIniziale = False
-                    if 'email' in j:
-                        isInvioConfigurazioneIniziale = True
+                if Devices.objects(mat = j['Seriale']):
+                    if "Seriale" in msg.decode("utf-8"):
+                        t = Esito("OK")
+                        trovato = False
+                        rispondereOK = True
+                        
+                        #Stabilisco se è l'invio della configurazione iniziale..
+                        isInvioConfigurazioneIniziale = False
+                        if 'email' in j:
+                            isInvioConfigurazioneIniziale = True
 
-                    for cl in self.clients:
-                        if cl[1] == j['Seriale']:
-                            trovato = True
+                        for cl in self.clients:
+                            if cl[1] == j['Seriale']:
+                                trovato = True
 
-                            cl[0] = clientsocket
-                            print("Aggiornato Array")
+                                cl[0] = clientsocket
+                                print("Aggiornato Array")
 
-                            #Se è l'invio di Esito in seguito alla richiesta di Attiva/Disattiva Allarme
-                            if 'Esito' in j:
-                                cl[2] = j['Esito']
-                                rispondereOK = False
-                            #Se è la risposta seguita da una richista di "stato"
-                            elif 'Z1' in j:
-                                rispondereOK = False
-                                cl[3] = msg.decode("utf-8")
-                            #Se è un' invio di log
-                            elif 'Log' in j:
-                                #Bisogna Archiviare i log nel db..
-                                print(j['Log'])
+                                #Se è l'invio di Esito in seguito alla richiesta di Attiva/Disattiva Allarme
+                                if 'Esito' in j:
+                                    cl[2] = j['Esito']
+                                    rispondereOK = False
+                                #Se è la risposta seguita da una richista di "stato"
+                                elif 'Z1' in j:
+                                    rispondereOK = False
+                                    cl[3] = msg.decode("utf-8")
+                                #Se è un' invio di log
+                                elif 'Log' in j:
+                                    #Bisogna Archiviare i log nel db..
+                                    print(j['Log'])
+
+                                
+                                break
+                        
+                        if not trovato:
+                            self.clients.append([clientsocket, j['Seriale'], "", ""])
+                            print("Aggiunto")
+
+                        if isInvioConfigurazioneIniziale:
                             
-                            break
-                    
-                    if not trovato:
-                        self.clients.append([clientsocket, j['Seriale'], "", ""])
-                        print("Aggiunto")
+                            print("Archivio La Conf. Iniz. Nel DB")
 
-                    if isInvioConfigurazioneIniziale:
-                        print("Archivio La Conf. Iniz. Nel DB")
+                        if rispondereOK:
+                            clientsocket.send(bytearray(json.dumps(t.__dict__), 'utf-8'))
+                        
+                        print("NumClient ", len(self.clients))
 
-                    if rispondereOK:
-                        clientsocket.send(bytearray(json.dumps(t.__dict__), 'utf-8'))
-                    
-                    print("NumClient ", len(self.clients))
-
-                #else:
-                #    t = Esito("KO")
-                #    clientsocket.send(bytearray(json.dumps(t.__dict__), 'utf-8'))
-                #    clientsocket.close()
-                #    break
+                else:
+                    t = Esito("KO")
+                    clientsocket.send(bytearray(json.dumps(t.__dict__), 'utf-8'))
+                    clientsocket.close()
+                    #break
             else:
                 print ("msg Ignorato: " + msg.decode("utf-8"))
 

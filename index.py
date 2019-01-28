@@ -11,6 +11,8 @@ from controllers.Api_App.setStatus import setStatusContoller
 from controllers.Api_App.checkIdentity import checkIdentity
 from models.Users import *
 from models.Devices import *
+from controllers.Api_Arduino.submit import submit
+
 
 app = Flask(__name__)
 app.debug = True
@@ -45,6 +47,22 @@ def index():
 @cross_origin()
 def stato():
     return ard.statoAllarme("01240009480124000966")
+
+@app.route("/SubmitNewArduino", methods=['POST'])
+@cross_origin(origin='*')
+def SubmitNewArduino():
+    print(request.get_json())
+    if submit(request.get_json()):
+        #data = {}
+        #data['Esito'] = "OK"
+        #json_data = json.dumps(data)
+        return Response(status = 200)
+    else: 
+        #data = {}
+        #data['Esito'] = "KO"
+        #json_data = json.dumps(data)
+        return Response(status = 400)
+        #return Response(json_data, status = 400, mimetype='application/json', content_type='application/json')
 
 @app.route('/Api/App/checkIdentity', methods=['POST'])
 @cross_origin()
@@ -92,5 +110,5 @@ def setStatus():
     return Response('', status = setStatusContoller(request.get_json()), mimetype='application/json')
 
 if __name__ == "__main__":
-    app.run(use_reloader=False)
+    app.run(use_reloader=False, host="0.0.0.0")
 
