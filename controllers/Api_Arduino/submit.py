@@ -24,7 +24,7 @@ def submit(body):
     #Users[0].save
 
     try:
-        Users.objects(email = body['email'])[0].device = newDevice
+        Users.objects(email = body['email'])[0].update(device = newDevice)
     except:
         print('Errore ..')
 
