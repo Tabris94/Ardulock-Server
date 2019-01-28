@@ -12,7 +12,7 @@ from controllers.Api_App.checkIdentity import checkIdentity
 from models.Users import *
 from models.Devices import *
 from controllers.Api_Arduino.submit import submit
-
+from Api_Arduino.setStatusArduino import setStatusArduino
 
 app = Flask(__name__)
 app.debug = True
@@ -23,30 +23,35 @@ ard = Arduino()
 
 connect('Ardulock-db', host='localhost', port=27017)
 
-@app.route("/z1")
-@cross_origin()
-def z1():
-    return 'Zona 1 ' + ard.attivaZone("01240009480124000966", True, False)
+# @app.route("/AttivaDisattivaAllarme", methods=['POST'])
+# @cross_origin()
+# def AttivaDisattivaAllarme():
 
-@app.route("/z2")
-@cross_origin()
-def z2():
-    return 'Zona 2 ' + ard.attivaZone("01240009480124000966", False, True)
+#     if ard.attivaZone("01240009480124000966", True, False) == "OK":
+#         return Response(status = 200)
+#     else:
+#         return Response(status = 400)
+#     #return 'Zona 1 ' + ard.attivaZone("01240009480124000966", True, False)
 
-@app.route("/z3")
-@cross_origin()
-def z3():
-    return 'Entrambe ' + ard.attivaZone("01240009480124000966", True, True)
+# @app.route("/z2")
+# @cross_origin()
+# def z2():
+#     return 'Zona 2 ' + ard.attivaZone("01240009480124000966", False, True)
 
-@app.route("/z0")
-@cross_origin()
-def index():
-    return 'hello world ' + ard.attivaZone("01240009480124000966", False, False)
+# @app.route("/z3")
+# @cross_origin()
+# def z3():
+#     return 'Entrambe ' + ard.attivaZone("01240009480124000966", True, True)
 
-@app.route("/stato")
-@cross_origin()
-def stato():
-    return ard.statoAllarme("01240009480124000966")
+# @app.route("/z0")
+# @cross_origin()
+# def index():
+#     return 'hello world ' + ard.attivaZone("01240009480124000966", False, False)
+
+# @app.route("/stato")
+# @cross_origin()
+# def stato():
+#     return ard.statoAllarme("01240009480124000966")
 
 @app.route("/SubmitNewArduino", methods=['POST'])
 @cross_origin(origin='*')
@@ -107,7 +112,9 @@ def getArdulocks():
 @app.route("/Api/App/setStatus", methods=['POST'])
 @cross_origin()
 def setStatus():
-    return Response('', status = setStatusContoller(request.get_json()), mimetype='application/json')
+    j = request.get_json()
+    setStatusArduino(ard, j['mat'])
+    return Response('', status = setStatusContoller(j), mimetype='application/json')
 
 if __name__ == "__main__":
     app.run(use_reloader=False, host="0.0.0.0")
