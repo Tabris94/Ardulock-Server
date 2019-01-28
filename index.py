@@ -12,7 +12,6 @@ from controllers.Api_App.checkIdentity import checkIdentity
 from models.Users import *
 from models.Devices import *
 from controllers.Api_Arduino.submit import submit
-from Api_Arduino.setStatusArduino import setStatusArduino
 
 app = Flask(__name__)
 app.debug = True
@@ -112,9 +111,7 @@ def getArdulocks():
 @app.route("/Api/App/setStatus", methods=['POST'])
 @cross_origin()
 def setStatus():
-    j = request.get_json()
-    setStatusArduino(ard, j['mat'])
-    return Response('', status = setStatusContoller(j), mimetype='application/json')
+    return Response('', status = setStatusContoller(ard, request.get_json()), mimetype='application/json')
 
 if __name__ == "__main__":
     app.run(use_reloader=False, host="0.0.0.0")
