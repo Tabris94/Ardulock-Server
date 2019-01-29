@@ -113,6 +113,20 @@ def getArdulocks():
 def setStatus():
     return Response('', status = setStatusContoller(ard, request.get_json()), mimetype='application/json')
 
+@app.route("/Api/App/getLog", methods=['POST'])
+@cross_origin()
+def getLog():
+    result = getLogs(request.get_json())
+    data={}
+    row={}
+    i=-1
+    for x in result:
+        i+=1
+        data[i]= x.txt + x.time.strftime(' %d/%b/%Y alle %H:%M')
+
+    json_data= json.dumps(data)
+    return Response(json_data, status = 200, mimetype='application/json')
+
 if __name__ == "__main__":
     app.run(use_reloader=False, host="0.0.0.0")
 

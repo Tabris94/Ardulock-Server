@@ -5,6 +5,7 @@ import json
 import time
 import requests
 from models.Devices import Devices
+from controllers.Api_Arduino.setStatusArduino import archiviaLogArduino
 
 class Esito:
     def __init__(self, e):
@@ -76,10 +77,8 @@ class Arduino:
                                     cl[3] = msg.decode("utf-8")
                                 #Se è un' invio di log
                                 elif 'Log' in j:
-                                    #Bisogna Archiviare i log nel db..
-                                    print(j['Log'])
-
-                                
+                                    archiviaLogArduino(cl[1], j['Log'])
+                                    
                                 break
                         
                         if not trovato:
