@@ -8,6 +8,7 @@ from controllers.Api_App.registration import registrationController
 from controllers.Api_App.login import loginController
 from controllers.Api_App.getArdulocks import getArdulocksController
 from controllers.Api_App.setStatus import setStatusContoller
+from controllers.Api_App.getLog import getLogs
 from controllers.Api_App.checkIdentity import checkIdentity
 from models.Users import *
 from models.Devices import *
