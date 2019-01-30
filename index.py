@@ -118,12 +118,10 @@ def setStatus():
 @cross_origin()
 def getLog():
     result = getLogs(request.get_json())
-    data={}
+    data=[]
     row={}
-    i=-1
     for x in result:
-        i+=1
-        data[i]= x.txt + x.time.strftime(' %d/%b/%Y alle %H:%M')
+        data.append(x.txt + x.time.strftime(' %d/%b/%Y alle %H:%M'))
 
     json_data= json.dumps(data)
     return Response(json_data, status = 200, mimetype='application/json')
